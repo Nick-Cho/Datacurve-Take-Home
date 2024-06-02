@@ -15,9 +15,10 @@ const ExecuteButton: React.FC = () => {
             },
             body: JSON.stringify({code})
         })
-        console.log("Test code req response: ", response);
+        // console.log("Test code req response: ", response);
         const data = await response.json();
-        console.log("Test code response data: ", data);
+        // console.log("Test code response data: ", data);
+        setResult(data);    
     }
 
     return (
