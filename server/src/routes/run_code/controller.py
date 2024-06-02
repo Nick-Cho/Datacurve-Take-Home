@@ -25,10 +25,13 @@ def execute_code(code: str) -> str:
             environment={"CODE": code},
             working_dir="/usr/src/app/util",
             detach=True,
+            
             # Disable network access so users can't make unauthorized requests on behalf of the server
             network_disabled=True,
+            # 
             mem_limit="256m",
-            cpu_shares=512
+            cpu_shares=512,
+            timeout=10
         )
         # Capture the output
         container.wait()
