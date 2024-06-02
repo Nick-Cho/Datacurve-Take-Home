@@ -26,7 +26,7 @@ const ExecuteButton: React.FC = () => {
             }
             
         } catch (error) {
-            console.error("Test code error: ", error);
+            console.error("Test-code error: ", error);
         }
         
     }

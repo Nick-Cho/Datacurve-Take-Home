@@ -1,8 +1,11 @@
 import subprocess
 import docker
 import json
-import logger
-from fastapi import HTTPException
+from sqlalchemy.orm import Session
+from ..util.models import CodeSubmission
+from ..util.config import get_db
+from fastapi import HTTPException, Depends
+
 
 def execute_code(code: str) -> str:
     client = docker.from_env()
@@ -22,6 +25,7 @@ def execute_code(code: str) -> str:
             environment={"CODE": code},
             working_dir="/usr/src/app/util",
             detach=True,
+            # Disable network access so users can't make unauthorized requests on behalf of the server
             network_disabled=True,
             mem_limit="256m",
             cpu_shares=512
@@ -30,6 +34,7 @@ def execute_code(code: str) -> str:
         container.wait()
         exec_output = container.logs().decode('utf-8')
         exec_result = json.loads(exec_output)
+        container.remove()
         if exec_result.get("success"):
             return exec_result["output"]
         else:
@@ -38,5 +43,17 @@ def execute_code(code: str) -> str:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+def save_test_code (code: str, output: str, db: Session = Depends(get_db)) -> str:
+    code_submission = CodeSubmission(code=code, output=output)
+    try:
+        db.add(code_submission)
+        db.commit()
+        db.refresh(code_submission)    
+        return "Successfully saved code submission"
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    
     
 
