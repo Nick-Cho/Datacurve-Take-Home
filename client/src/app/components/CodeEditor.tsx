@@ -15,13 +15,7 @@ const CodeEditor: React.FC = () => {
          onValueChange={code => setCode(code)}
          highlight={code => highlight(code, languages.python, "python")}
          padding={10}
-         style={{
-            fontFamily: '"Fira code", "Fira Mono", monospace',
-            fontSize: 12,
-            backgroundColor: 'rgb(24 24 27)',
-            minWidth: '100%',
-            height: '40rem'
-          }}
+         className = "code-editor"
         >
         </Editor>
     )
