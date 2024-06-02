@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./server/src
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - execution
+    deploy:
+      resources:
+        # Limits imposed to prevent malicious user code over consuming resources
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  execution:
+    build:
+      context: ./server/src/run_code
+      dockerfile: Dockerfile
+    volumes:
+      - ./server/src/run_code:/usr/src/app:ro
+    deploy:
+      resources:
+      # Limits imposed to prevent malicious user code over consuming resources
+        limits:
+          cpus: '0.5'
+          memory: 256M
