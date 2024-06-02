@@ -1,6 +1,7 @@
 import subprocess
 import docker
 import json
+import logger
 from fastapi import HTTPException
 
 def execute_code(code: str) -> str:
@@ -8,24 +9,25 @@ def execute_code(code: str) -> str:
     
     try:
         container = client.containers.run(
-            image="code-execution-image",
-            command=["python3", "/usr/src/app/run_code.py"],
-            remove=True,
+            image="datacurve-take-home-backend:latest",
+            command=["python3", "/usr/src/app/util/run_code.py"],
+            remove=False,
             stdin_open=True,
             volumes={
-                "../../util/run_code.py": {
-                    "bind": "/usr/src/app/run_code.py",
+                "/Users/nickcho/Desktop/Coding/Datacurve-Take-Home/server/src/util/run_code.py": {
+                    "bind": "/usr/src/app/util/run_code.py",
                     "mode": "ro"
                 }
             },
             environment={"CODE": code},
-            working_dir="/usr/src/app",
-            detach=False,
+            working_dir="/usr/src/app/util",
+            detach=True,
             network_disabled=True,
             mem_limit="256m",
             cpu_shares=512
         )
         # Capture the output
+        container.wait()
         exec_output = container.logs().decode('utf-8')
         exec_result = json.loads(exec_output)
         if exec_result.get("success"):

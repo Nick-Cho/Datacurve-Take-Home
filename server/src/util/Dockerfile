@@ -5,11 +5,11 @@ RUN groupadd -r appuser && useradd -r -g appuser appuser
 
 WORKDIR /usr/src/app
 
-# Script used to execute the python code
-COPY run_code.py .
-
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Script used to execute the python code
+COPY run_code.py .
 
 # Changing ownership of the directory to use newly created user
 RUN chown -R appuser:appuser /usr/src/app

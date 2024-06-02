@@ -3,7 +3,7 @@ version: '3.8'
 services:
   backend:
     build:
-      context: ./server/src
+      context: ./server/src/util
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
@@ -18,10 +18,10 @@ services:
 
   execution:
     build:
-      context: ./server/src/run_code
+      context: ./server/src/util
       dockerfile: Dockerfile
     volumes:
-      - ./server/src/run_code:/usr/src/app:ro
+      - ./server/src/util:/usr/src/app/util:ro
     deploy:
       resources:
       # Limits imposed to prevent malicious user code over consuming resources
