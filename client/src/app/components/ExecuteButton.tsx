@@ -8,17 +8,27 @@ const ExecuteButton: React.FC = () => {
     
     const handleExecute = async () => {
         console.log(JSON.stringify({"code": code}))
-        const response = await fetch('http://localhost:8000/test-code', {
+        try{
+            const response = await fetch('http://localhost:8000/test-code', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({code})
-        })
-        // console.log("Test code req response: ", response);
-        const data = await response.json();
-        // console.log("Test code response data: ", data);
-        setResult(data);    
+            })
+            
+            if (response.status !== 200) {
+                setResult("Code Execution Error");
+            } else {
+                const data = await response.json();
+                // console.log("Test code response data: ", data);
+                setResult(data);    
+            }
+            
+        } catch (error) {
+            console.error("Test code error: ", error);
+        }
+        
     }
 
     return (
