@@ -16,12 +16,12 @@ const ExecuteButton: React.FC = () => {
             },
             body: JSON.stringify({code})
             })
-            
+
             if (response.status !== 200) {
                 setResult("Code Execution Error");
             } else {
                 const data = await response.json();
-                // console.log("Test code response data: ", data);
+                console.log("Test code response data: ", data);
                 setResult(data);    
             }
             

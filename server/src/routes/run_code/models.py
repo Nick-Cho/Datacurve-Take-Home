@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, BINARY, TEXT, DATETIME, PrimaryKeyConstraint
 from sqlalchemy.sql import func
-from .config import Base
+from .util.database import Base
 
 class CodeSubmission(Base):
     __tablename__ = "code_submissions"

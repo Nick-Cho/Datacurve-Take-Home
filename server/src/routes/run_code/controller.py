@@ -2,8 +2,8 @@ import subprocess
 import docker
 import json
 from sqlalchemy.orm import Session
-from ..util.models import CodeSubmission
-from ..util.config import get_db
+from .models import CodeSubmission
+from .util.config import get_db
 from fastapi import HTTPException, Depends
 
 
@@ -30,11 +30,10 @@ def execute_code(code: str) -> str:
             network_disabled=True,
             # 
             mem_limit="256m",
-            cpu_shares=512,
-            timeout=10
+            cpu_shares=512
         )
         # Capture the output
-        container.wait()
+        container.wait(timeout=10)
         exec_output = container.logs().decode('utf-8')
         exec_result = json.loads(exec_output)
         container.remove()
